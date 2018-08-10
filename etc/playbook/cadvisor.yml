@@ -1,0 +1,20 @@
+- hosts: "{{hosts}}"
+  become: yes
+  tasks:
+  - name: install python-pip
+    yum:
+      name: python-pip
+      state: latest
+  - name: install docker-py
+    pip:
+      name: docker-py
+  - name: run cadvisor
+    docker:
+      name: cadvisor
+      image: google/cadvisor:latest
+      ports: 9095:8080
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:rw
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro

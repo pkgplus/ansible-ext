@@ -1,0 +1,99 @@
+#! /usr/bin/env bash
+
+# chkconfig: 2345 80 05
+# description: Node Exporter for prometheus
+# processname: node_exporter
+# pidfile: /var/run/node_exporter.pid
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=node_exporter
+DESC="Node Exporter"
+
+RUN_USER=node_exporter
+RUN_GROUP=exporter
+#RUN_HOME=$HOME
+MAX_OPEN_FILES=10000
+LOG_FILE=/var/log/$NAME.log
+DAEMON=/usr/sbin/$NAME
+
+if [ `id -u` -ne 0 ]; then
+  echo "You need root privileges to run this script"
+  exit 4
+fi
+
+if [ ! -x $DAEMON ]; then
+  echo "Program not installed or not executable"
+  exit 5
+fi
+
+#
+# init.d / servicectl compatibility (openSUSE)
+#
+if [ -f /etc/rc.status ]; then
+    . /etc/rc.status
+    rc_reset
+fi
+
+#
+# Source function library.
+#
+if [ -f /etc/rc.d/init.d/functions ]; then
+    . /etc/rc.d/init.d/functions
+fi
+
+# overwrite settings from default file
+[ -e /etc/sysconfig/$NAME ] && . /etc/sysconfig/$NAME
+
+DAEMON_OPTS=$OPTIONS
+
+function isRunning() {
+  ps -ef|grep -v grep|grep $DAEMON
+}
+
+case "$1" in
+  start)
+    isRunning
+    return=$?
+    echo $return
+    if [ $return -eq 0 ]; then
+      echo "Already running."
+      exit 0
+    fi
+
+    if [ -n "$MAX_OPEN_FILES" ]; then
+      ulimit -n $MAX_OPEN_FILES
+    fi
+
+    # Start Daemon
+    #cd $RUN_HOME
+    echo -n "Starting $DESC: ..." 
+    su -s /bin/sh -c "nohup ${DAEMON} ${DAEMON_OPTS} >> /dev/null 3>&1 &" $RUN_USER 2> /dev/null
+    return=$?
+
+    exit $return
+    ;;
+  stop)
+    echo -n "Stopping $DESC: ..."
+
+    ps aux|grep $DAEMON|grep -v grep| awk '{print $2}'|xargs kill
+    return=$?
+    if [ $return -eq "0" ]; then
+      exit 0
+    else
+      echo  "(not running)"
+    fi
+    exit 0
+    ;;
+  status)
+    ps aux|grep $DAEMON|grep -v grep
+    exit $?
+    ;;
+  restart|force-reload)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|force-reload|status}"
+    exit 3
+    ;;
+esac

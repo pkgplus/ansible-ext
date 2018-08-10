@@ -1,0 +1,60 @@
+- hosts: "{{hosts}}"
+  sudo: yes
+  tasks:
+  - name: create exporter group
+    group:
+      name=exporter
+  - name: create exporter user
+    user:
+      name=exporter
+      comment="prometheus exporter user"
+      group=exporter
+      shell=/sbin/nologin
+      createhome=no
+  - name: redis_exporter service file
+    copy:
+      src=/etc/systemd/system/redis_exporter.service
+      dest=/etc/systemd/system/redis_exporter_{{listen_port}}.service
+    when: ansible_distribution_major_version == "7"
+  - name: set running script args for listen port
+    shell: perl -pi -e 's/\$REDIS_EXPORTER_LISTEN_PORT/0.0.0.0:{{listen_port}}/' /etc/systemd/system/redis_exporter_{{listen_port}}.service
+    when: ansible_distribution_major_version == "7"
+  - name: set running script args
+    shell: perl -pi -e 's/\$REDIS_OPTIONS/{{options}}/' /etc/systemd/system/redis_exporter_{{listen_port}}.service
+    when: ansible_distribution_major_version == "7"
+  - name: create Downloads dir
+    file:
+      path=/root/Downloads
+      state=directory
+  - name: download the redis_exporter pkg
+    get_url:
+      url: https://download-1254263792.cos.ap-beijing.myqcloud.com/redis_exporter-v0.20.1.linux-amd64.tar.gz
+      dest: /root/Downloads/redis_exporter-v0.20.1.linux-amd64.tar.gz
+      validate_certs: no
+  - name: unzip redis_exporter pkg
+    unarchive:
+      src=/root/Downloads/redis_exporter-v0.20.1.linux-amd64.tar.gz
+      dest=/root/Downloads
+      remote_src=yes
+  - name: move redis_exporter
+    shell: cp -f /root/Downloads/redis_exporter /usr/sbin/redis_exporter
+  - name: enable redis_exporter_{{listen_port}}
+    service:
+      name=redis_exporter_{{listen_port}}
+      enabled=yes
+  - name: enable redis_exporter_{{listen_port}}
+    service: name=redis_exporter_{{listen_port}} state=reloaded
+    when: ansible_distribution_major_version != "7"
+  - name: enable redis_exporter_{{listen_port}}
+    systemd:
+      name: redis_exporter_{{listen_port}}
+      daemon_reload: yes
+    when: ansible_distribution_major_version == "7"
+  - name: start redis_exporter_{{listen_port}}
+    service: name=redis_exporter_{{listen_port}} state=restarted
+  - name: configure firewall
+    shell: firewall-cmd --permanent --zone=public --add-port={{listen_port}}/tcp
+    ignore_errors: True
+  - name: reload firewall
+    shell: firewall-cmd --reload
+    ignore_errors: True

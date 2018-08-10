@@ -1,0 +1,63 @@
+- name: "mysqld_exporter"
+  hosts: "{{hosts}}"
+  become: yes
+  tasks:
+  - name: create exporter group
+    group:
+      name=exporter
+  - name: create mysqld_exporter user
+    user:
+      name=exporter
+      comment="prometheus exporter user"
+      group=exporter
+      shell=/sbin/nologin
+      createhome=no
+  - name: sysconfig mysqld_exporter file
+    copy:
+      src=/etc/sysconfig/mysqld_exporter
+      dest=/etc/sysconfig/mysqld_exporter
+  - name: mkdir /etc/prometheus dirctory
+    file:
+      path=/etc/prometheus
+      state=directory
+  - name: my.cnf file
+    shell: echo -e "[client]\nuser=username\npassword=password"  > /etc/prometheus/.my.cnf
+  - name: set user
+    shell: perl -pi -e 's/user=(\S+)/user={{mysql_user}}/' /etc/prometheus/.my.cnf
+  - name: set password
+    shell: perl -pi -e 's/password=(\S+)/password={{mysql_password}}/' /etc/prometheus/.my.cnf
+  - name: sysconfig.mysqld_exporter file
+    copy:
+      src=/etc/systemd/system/mysqld_exporter.service
+      dest=/etc/systemd/system/mysqld_exporter.service
+    when: ansible_distribution_major_version == "7"
+  - name: init.d mysqld_exporter file
+    copy:
+      src=/etc/init.d/mysqld_exporter
+      dest=/etc/init.d/mysqld_exporter
+      mode=755
+    when: ansible_distribution_major_version != "7"
+  - name: deploy the mysqld_exporter pkg
+    get_url:
+      url=https://github.com/prometheus/mysqld_exporter/releases/download/v0.10.0/mysqld_exporter-0.10.0.linux-amd64.tar.gz
+      dest=/root/Downloads/mysqld_exporter-0.10.0.linux-amd64.tar.gz
+      validate_certs=no
+  - name: unzip mysqld_exporter pkg
+    unarchive:
+      src=/root/Downloads/mysqld_exporter-0.10.0.linux-amd64.tar.gz
+      dest=/root/Downloads
+      remote_src=yes
+  - name: move mysqld_exporter
+    shell: cp -f /root/Downloads/mysqld_exporter-0.10.0.linux-amd64/mysqld_exporter /usr/sbin/mysqld_exporter
+  - name: enable mysqld_exporter
+    service:
+      name=mysqld_exporter
+      enabled=yes
+  - name: start mysqld_exporter
+    service: name=mysqld_exporter state=restarted
+  - name: configure firewall
+    shell: firewall-cmd --permanent --zone=public --add-port=9104/tcp
+    ignore_errors: True
+  - name: reload firewall
+    shell: firewall-cmd --reload
+    ignore_errors: True

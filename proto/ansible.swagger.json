@@ -1,0 +1,274 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ansible.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/ansible/host_check": {
+      "post": {
+        "operationId": "CheckHost",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AnsibleCommonReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnsibleHostConfigure"
+            }
+          }
+        ],
+        "tags": [
+          "Ansible"
+        ]
+      }
+    },
+    "/api/v1/ansible/hosts": {
+      "post": {
+        "operationId": "AddHost",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AnsibleCommonReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnsibleHostConfigureWithLabel"
+            }
+          }
+        ],
+        "tags": [
+          "Ansible"
+        ]
+      }
+    },
+    "/api/v1/ansible/play/{name}/{version}": {
+      "post": {
+        "summary": "rpc Play (PlayBook) returns (stream PlayBookMessage) {\n     option (google.api.http) = {\n     post: \"/v1/ansible/play\"\n     body: \"*\"\n   };\n }",
+        "operationId": "RunPlayBook",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/AnsiblePlayBookMessage"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnsiblePlayBook"
+            }
+          }
+        ],
+        "tags": [
+          "Ansible"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AnsibleCommonReply": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnsibleResult"
+          }
+        }
+      }
+    },
+    "AnsibleHostConfigure": {
+      "type": "object",
+      "properties": {
+        "sshInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnsibleSshInfo"
+          }
+        }
+      }
+    },
+    "AnsibleHostConfigureWithLabel": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "sshInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnsibleSshInfo"
+          }
+        }
+      }
+    },
+    "AnsiblePlayBook": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "register": {
+          "$ref": "#/definitions/AnsibleRegister"
+        }
+      }
+    },
+    "AnsiblePlayBookMessage": {
+      "type": "object",
+      "properties": {
+        "job": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "step": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "ok": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "changed": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unreach": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "failed": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "progress": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AnsibleRegister": {
+      "type": "object",
+      "properties": {
+        "listenPort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AnsibleResult": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "AnsibleSshInfo": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "passwd": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

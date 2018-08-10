@@ -1,0 +1,1 @@
+OPTIONS="-config.my-cnf /etc/prometheus/.my.cnf -collect.binlog_size=true -collect.info_schema.processlist=true"

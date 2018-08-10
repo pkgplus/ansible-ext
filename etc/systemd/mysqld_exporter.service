@@ -1,0 +1,10 @@
+[Unit]
+Description=Node Exporter
+
+[Service]
+User=exporter
+EnvironmentFile=/etc/sysconfig/mysqld_exporter
+ExecStart=/usr/sbin/mysqld_exporter $OPTIONS
+
+[Install]
+WantedBy=multi-user.target

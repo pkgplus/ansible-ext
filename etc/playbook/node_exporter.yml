@@ -1,0 +1,60 @@
+- name: "node_exporter"
+  hosts: "{{hosts}}"
+  become: yes
+  tasks:
+  - name: create exporter group
+    group:
+      name=exporter
+  - name: create node_exporter user
+    user:
+      name=exporter
+      comment="prometheus exporter user"
+      group=exporter
+      shell=/sbin/nologin
+      createhome=no
+  - name: mkdir dirctory
+    file:
+      path=/var/lib/node_exporter/textfile_collector
+      state=directory
+  - name: sysconfig.node_exporter file
+    copy:
+      src=/etc/sysconfig/node_exporter
+      dest=/etc/sysconfig/node_exporter
+  - name: node_exporter service file
+    copy:
+      src=/etc/systemd/system/node_exporter.service
+      dest=/etc/systemd/system/node_exporter.service
+    when: ansible_distribution_major_version == "7"
+  - name: service node_exporter file for centos6
+    copy:
+      src=/etc/init.d/node_exporter
+      dest=/etc/init.d/node_exporter
+      mode=755
+    when: ansible_distribution_major_version != "7"
+  - name: create Downloads dir
+    file:
+      path=/root/Downloads
+      state=directory
+  - name: deploy the node_exporter pkg
+    copy:
+      src=/root/Downloads/node_exporter-0.14.0.linux-amd64.tar.gz
+      dest=/root/Downloads/node_exporter-0.14.0.linux-amd64.tar.gz
+  - name: unzip node_exporter pkg
+    unarchive:
+      src=/root/Downloads/node_exporter-0.14.0.linux-amd64.tar.gz
+      dest=/root/Downloads
+      remote_src=yes
+  - name: move node_exporter
+    shell: cp -f /root/Downloads/node_exporter-0.14.0.linux-amd64/node_exporter /usr/sbin/node_exporter
+  - name: enable node_exporter
+    service:
+      name=node_exporter
+      enabled=yes
+  - name: start node_exporter
+    service: name=node_exporter state=restarted
+  - name: configure firewall
+    shell: firewall-cmd --permanent --zone=public --add-port=9100/tcp
+    ignore_errors: True
+  - name: reload firewall
+    shell: firewall-cmd --reload
+    ignore_errors: True

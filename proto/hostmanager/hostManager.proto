@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.bingbaba.ansible-ext.hostManager";
+option java_outer_classname = "HostManagerProto";
+
+package HostManager;
+
+import "google/api/annotations.proto";
+
+service HostManager {
+    rpc Precheck (PrecheckRequest) returns (InitOrPrecheckReply) {
+        option (google.api.http) = {
+      post: "/v1/hostmanager/precheck"
+      body: "*"
+    };
+    }
+    rpc InitHosts (InitRequest) returns (InitOrPrecheckReply) {
+        option (google.api.http) = {
+      post: "/v1/hostmanager/init"
+      body: "*"
+    };
+    }
+    rpc Install (InstallRequest) returns (stream InstallMessage) {
+        option (google.api.http) = {
+      post: "/v1/hostmanager/install"
+      body: "*"
+    };
+    }
+    rpc Install2 (InstallRequest2) returns (stream InstallMessage) {
+        option (google.api.http) = {
+      post: "/v1/hostmanager/install2"
+      body: "*"
+    };
+    }
+}
+
+message PrecheckRequest {
+    repeated LoginInfo loginInfos = 1;
+}
+
+message InitOrPrecheckReply {
+    repeated TaskResult results = 1;
+}
+
+message LoginInfo {
+    string host = 1;
+    int32 port = 2;
+    string userName = 3;
+    string passwd = 4;
+}
+
+message TaskResult {
+    string host = 1;
+    string status = 2;
+    string message = 3;
+    string reason = 4;
+}
+
+message InitRequest {
+    map<string, string> labels = 1;
+    repeated LoginInfo loginInfos = 2;
+}
+
+message InstallRequest {
+    map<string, string> labels = 1;
+    map<string, InstallJobs> jobs = 2;
+}
+
+message InstallJobs {
+    repeated string ansibleJobs = 1;
+}
+
+message InstallRequest2 {
+    map<string, string> labels = 1;
+    map<string, string> params = 2;
+    repeated HostInstallJobs jobs = 3;
+}
+
+message HostInstallJobs {
+    string host = 1;
+    repeated string names = 2;
+}
+
+message InstallMessage {
+    string job = 1;
+    string type = 2;
+    string host = 3;
+    int32 step = 4;
+    string name = 5;
+    string status = 6;
+    string message = 7;
+
+    int32 ok = 8;
+    int32 changed = 9;
+    int32 unreach = 10;
+    int32 failed = 11;
+    int32 progress = 12;
+}

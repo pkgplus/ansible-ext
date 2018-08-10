@@ -1,0 +1,311 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "hostmanager.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/hostmanager/init": {
+      "post": {
+        "operationId": "InitHosts",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/HostManagerInitOrPrecheckReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HostManagerInitRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HostManager"
+        ]
+      }
+    },
+    "/v1/hostmanager/install": {
+      "post": {
+        "operationId": "Install",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/HostManagerInstallMessage"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HostManagerInstallRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HostManager"
+        ]
+      }
+    },
+    "/v1/hostmanager/install2": {
+      "post": {
+        "operationId": "Install2",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/HostManagerInstallMessage"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HostManagerInstallRequest2"
+            }
+          }
+        ],
+        "tags": [
+          "HostManager"
+        ]
+      }
+    },
+    "/v1/hostmanager/precheck": {
+      "post": {
+        "operationId": "Precheck",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/HostManagerInitOrPrecheckReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HostManagerPrecheckRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HostManager"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "HostManagerHostInstallJobs": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "HostManagerInitOrPrecheckReply": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HostManagerTaskResult"
+          }
+        }
+      }
+    },
+    "HostManagerInitRequest": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "loginInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HostManagerLoginInfo"
+          }
+        }
+      }
+    },
+    "HostManagerInstallJobs": {
+      "type": "object",
+      "properties": {
+        "ansibleJobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "HostManagerInstallMessage": {
+      "type": "object",
+      "properties": {
+        "job": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "step": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "ok": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "changed": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unreach": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "failed": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "progress": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "HostManagerInstallRequest": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "jobs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/HostManagerInstallJobs"
+          }
+        }
+      }
+    },
+    "HostManagerInstallRequest2": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "jobs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HostManagerHostInstallJobs"
+          }
+        }
+      }
+    },
+    "HostManagerLoginInfo": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "passwd": {
+          "type": "string"
+        }
+      }
+    },
+    "HostManagerPrecheckRequest": {
+      "type": "object",
+      "properties": {
+        "loginInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HostManagerLoginInfo"
+          }
+        }
+      }
+    },
+    "HostManagerTaskResult": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

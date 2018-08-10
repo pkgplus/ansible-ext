@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.bingbaba.ansible-ext.ansible";
+option java_outer_classname = "AnsibleProto";
+
+package Ansible;
+
+import "google/api/annotations.proto";
+
+service Ansible {
+  rpc CheckHost (HostConfigure) returns (CommonReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ansible/host_check"
+      body: "*"
+    };
+  }
+  rpc AddHost (HostConfigureWithLabel) returns (CommonReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ansible/hosts"
+      body: "*"
+    };
+  }
+//  rpc Play (PlayBook) returns (stream PlayBookMessage) {
+//      option (google.api.http) = {
+//      post: "/v1/ansible/play"
+//      body: "*"
+//    };
+//  }
+  rpc RunPlayBook (PlayBook) returns (stream PlayBookMessage) {
+      option (google.api.http) = {
+      post: "/api/v1/ansible/play/{name}/{version}"
+      body: "*"
+    };
+  }
+}
+
+message HostConfigure {
+    repeated SshInfo sshInfos = 1;
+}
+
+message SshInfo {
+    string host = 1;
+    int32 port = 2;
+    string userName = 3;
+    string passwd = 4;
+}
+
+message HostConfigureWithLabel {
+    map<string, string> labels = 1;
+    repeated SshInfo sshInfos = 2;
+}
+
+message CommonReply {
+    repeated Result results = 1;
+}
+
+message Result {
+    string host = 1;
+    string status = 2;
+    string message = 3;
+    string reason = 4;
+}
+
+message PlayBook {
+    string name = 1;
+    string version = 2;
+    map<string, string> params = 3;
+    repeated string hosts = 4;
+    Register register = 5;
+}
+
+message Register {
+    int32 listenPort = 1;
+    map<string, string> labels = 2;
+}
+
+message PlayBookItems {
+    string host = 1;
+    repeated string names = 2;
+}
+
+message PlayBookMessage {
+    string job = 1;
+    string type = 2;
+    string host = 3;
+    int32 step = 4;
+    string name = 5;
+    string status = 6;
+    string message = 7;
+
+    int32 ok = 8;
+    int32 changed = 9;
+    int32 unreach = 10;
+    int32 failed = 11;
+    int32 progress = 12;
+}

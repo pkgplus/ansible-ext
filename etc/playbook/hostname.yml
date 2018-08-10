@@ -1,0 +1,8 @@
+- name: hostname
+  hosts: "{{hosts}}"
+  become: yes
+  tasks:
+    - name: hostname
+      shell: hostname
+    - name: pwd
+      shell: pwd

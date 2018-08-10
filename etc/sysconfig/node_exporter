@@ -1,0 +1,1 @@
+OPTIONS="-collector.textfile.directory /var/lib/node_exporter/textfile_collector -collectors.enabled=diskstats,filefd,filesystem,loadavg,meminfo,netdev,stat,time,uname,vmstat,tcpstat"

@@ -1,0 +1,9 @@
+[Unit]
+Description=Redis Exporter
+
+[Service]
+User=exporter
+ExecStart=/usr/sbin/redis_exporter -web.listen-address=$REDIS_EXPORTER_LISTEN_PORT $REDIS_OPTIONS
+
+[Install]
+WantedBy=multi-user.target
