@@ -138,10 +138,7 @@ func (w *Waitforer) read(ctx context.Context, wr *WaitforResult, expects ...inte
 
 		// get chunks length
 		chunks_len := len(chunks)
-		invisible_idx := bytes.LastIndex(chunks, []byte{27}) // ESC char
-		if invisible_idx >= 0 {
-			chunks_len = invisible_idx
-		}
+		chunks = bytes.TrimRight(chunks, string([]byte{27})) // ESC char
 
 		//loop expects
 		for ei, expect := range expects {
