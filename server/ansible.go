@@ -256,7 +256,7 @@ func runPlaybook(name, bookpath string, hosts []string, params map[string]string
 				}
 			} else { // register service to consul
 				if register != nil {
-					err := consul.RegisterService(name, host, register.ListenPort, register.Labels)
+					err := consul.RegisterService(name, host, register.ListenPort, register.ConsulAddress, register.DataCenter, register.Labels)
 					if err != nil {
 						log.Printf("registe %s's %s srv to consul failed: %v\n", host, name, err)
 					}

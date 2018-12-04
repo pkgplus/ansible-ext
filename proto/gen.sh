@@ -7,8 +7,8 @@
 
 echo "generate hostmanager stub..."
 protoc -I/usr/local/include \
-    -I/Users/xuebing/WorkSpace/go/src \
-    -I/Users/xuebing/WorkSpace/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+    -I$GOPATH/src \
+    -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
     -Ihostmanager/ \
     --go_out=plugins=grpc:hostmanager \
     hostmanager/hostmanager.proto
@@ -16,8 +16,8 @@ protoc -I/usr/local/include \
 ## generate gateway
 echo "generate hostmanager gateway..."
 protoc -I/usr/local/include \
-    -I/Users/xuebing/WorkSpace/go/src \
-    -I/Users/xuebing/WorkSpace/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+    -I$GOPATH/src \
+    -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
     -Ihostmanager/ \
     --grpc-gateway_out=logtostderr=true:hostmanager \
     hostmanager/hostmanager.proto
@@ -25,16 +25,16 @@ protoc -I/usr/local/include \
 ## generate swagger
 echo "generate hostmanager swagger..."
 protoc -I/usr/local/include \
-    -I/Users/xuebing/WorkSpace/go/src \
-    -I/Users/xuebing/WorkSpace/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+    -I$GOPATH/src \
+    -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
     -Ihostmanager/ \
     --swagger_out=logtostderr=true:. \
     hostmanager/hostmanager.proto
 
 echo "generate ansible stub..."
 protoc -I/usr/local/include \
-    -I/Users/xuebing/WorkSpace/go/src \
-    -I/Users/xuebing/WorkSpace/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+    -I$GOPATH/src \
+    -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
     -Iansible/ \
     --go_out=plugins=grpc:ansible \
     ansible/ansible.proto
@@ -42,8 +42,8 @@ protoc -I/usr/local/include \
 ## generate gateway
 echo "generate ansible gateway..."
 protoc -I/usr/local/include \
-    -I/Users/xuebing/WorkSpace/go/src \
-    -I/Users/xuebing/WorkSpace/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+    -I$GOPATH/src \
+    -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
     -Iansible/ \
     --grpc-gateway_out=logtostderr=true:ansible \
     ansible/ansible.proto
@@ -51,8 +51,8 @@ protoc -I/usr/local/include \
 ## generate swagger
 echo "generate ansible swagger..."
 protoc -I/usr/local/include \
-    -I/Users/xuebing/WorkSpace/go/src \
-    -I/Users/xuebing/WorkSpace/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+    -I$GOPATH/src \
+    -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
     -Iansible/ \
     --swagger_out=logtostderr=true:. \
     ansible/ansible.proto

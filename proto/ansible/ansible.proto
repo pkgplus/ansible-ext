@@ -72,7 +72,9 @@ message PlayBook {
 
 message Register {
     int32 listenPort = 1;
-    map<string, string> labels = 2;
+    string dataCenter = 2;
+    string consulAddress = 3;
+    map<string, string> labels = 4;
 }
 
 message PlayBookItems {

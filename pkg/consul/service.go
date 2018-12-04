@@ -8,9 +8,10 @@ import (
 )
 
 var defaultListenPort = map[string]int32{
-	"node_exporter":  9100,
-	"redis_exporter": 9121,
-	"mysql_exporter": 9104,
+	"node_exporter":     9100,
+	"redis_exporter":    9121,
+	"mysql_exporter":    9104,
+	"cadvisor_exporter": 9101,
 }
 
 //func getDefaultListenPort(path string) int32 {
@@ -19,10 +20,7 @@ var defaultListenPort = map[string]int32{
 //	return defaultListenPort[filename]
 //}
 
-func RegisterService(srvname string, host string, port int32, labelPairs map[string]string) error {
-	if consulClient == nil {
-		return errors.New("init consul client failed")
-	}
+func RegisterService(srvname string, host string, port int32, consulAddress string, dataCenter string, labelPairs map[string]string) error {
 
 	if port <= 0 {
 		var found bool
@@ -48,6 +46,16 @@ func RegisterService(srvname string, host string, port int32, labelPairs map[str
 		//	HTTP:     fmt.Sprintf("http://%s:%d%s", host, port, pbi.CheckPath),
 		//	Interval: "300s",
 		//},
+	}
+	if consulAddress != "" {
+		client, err := getClient(consulAddress, dataCenter)
+		if err != nil {
+			return err
+		}
+		return client.Agent().ServiceRegister(service)
+	}
+	if consulClient == nil {
+		return errors.New("init consul client failed")
 	}
 	return consulClient.Agent().ServiceRegister(service)
 }

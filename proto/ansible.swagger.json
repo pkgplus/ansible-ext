@@ -69,7 +69,7 @@
     },
     "/api/v1/ansible/play/{name}/{version}": {
       "post": {
-        "summary": "rpc Play (PlayBook) returns (stream PlayBookMessage) {\n     option (google.api.http) = {\n     post: \"/v1/ansible/play\"\n     body: \"*\"\n   };\n }",
+        "summary": "rpc Play (PlayBook) returns (stream PlayBookMessage) {\r\n     option (google.api.http) = {\r\n     post: \"/v1/ansible/play\"\r\n     body: \"*\"\r\n   };\r\n }",
         "operationId": "RunPlayBook",
         "responses": {
           "200": {
@@ -226,6 +226,12 @@
         "listenPort": {
           "type": "integer",
           "format": "int32"
+        },
+        "dataCenter": {
+          "type": "string"
+        },
+        "consulAddress": {
+          "type": "string"
         },
         "labels": {
           "type": "object",
