@@ -1,8 +1,8 @@
 package host
 
 import (
-	"github.com/xuebing1110/ansible-ext/pkg/ssh"
-	//pb "github.com/xuebing1110/ansible-ext/proto/HostManager"
+	"ansible-ext/pkg/ssh"
+	//pb "ansible-ext/proto/HostManager"
 )
 
 var (

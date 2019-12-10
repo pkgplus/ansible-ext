@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/xuebing1110/ansible-ext/proto/ansible"
+	pb "ansible-ext/proto/ansible"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

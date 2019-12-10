@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/xuebing1110/ansible-ext/pkg/ssh"
+	"ansible-ext/pkg/ssh"
 	xssh "golang.org/x/crypto/ssh"
 )
 

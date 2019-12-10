@@ -10,11 +10,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/xuebing1110/ansible-ext/proto/ansible"
-	"github.com/xuebing1110/ansible-ext/proto/hostmanager"
+	"ansible-ext/proto/ansible"
+	"ansible-ext/proto/hostmanager"
 
+	"ansible-ext/server"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/xuebing1110/ansible-ext/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 )

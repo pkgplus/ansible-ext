@@ -8,10 +8,10 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/xuebing1110/ansible-ext/host"
-	"github.com/xuebing1110/ansible-ext/pkg/ansible"
-	"github.com/xuebing1110/ansible-ext/pkg/ssh"
-	pb "github.com/xuebing1110/ansible-ext/proto/hostmanager"
+	"ansible-ext/host"
+	"ansible-ext/pkg/ansible"
+	"ansible-ext/pkg/ssh"
+	pb "ansible-ext/proto/hostmanager"
 )
 
 type HostManagerServer struct{}

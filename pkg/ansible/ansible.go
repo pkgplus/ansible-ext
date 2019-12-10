@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	hexec "github.com/xuebing1110/ansible-ext/pkg/exec"
+	hexec "ansible-ext/pkg/exec"
 )
 
 var (

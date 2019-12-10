@@ -1,7 +1,7 @@
 package host
 
 import (
-	"github.com/xuebing1110/ansible-ext/pkg/ping"
+	"ansible-ext/pkg/ping"
 )
 
 var (

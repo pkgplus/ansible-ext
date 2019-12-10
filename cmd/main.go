@@ -6,10 +6,10 @@ import (
 	"net"
 	"os"
 
-	"github.com/xuebing1110/ansible-ext/gateway"
-	"github.com/xuebing1110/ansible-ext/proto/ansible"
-	"github.com/xuebing1110/ansible-ext/proto/hostmanager"
-	"github.com/xuebing1110/ansible-ext/server"
+	"ansible-ext/gateway"
+	"ansible-ext/proto/ansible"
+	"ansible-ext/proto/hostmanager"
+	"ansible-ext/server"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

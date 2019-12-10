@@ -3,6 +3,7 @@
 ########## Reference documentation ##############
 # https://grpc.io/blog/coreos
 # https://github.com/grpc-ecosystem/grpc-gateway
+# require: https://github.com/protocolbuffers/protobuf/releases
 #################################################
 
 echo "generate hostmanager stub..."

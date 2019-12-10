@@ -12,11 +12,11 @@ import (
 	"encoding/json"
 	"golang.org/x/net/context"
 
-	"github.com/xuebing1110/ansible-ext/host"
-	"github.com/xuebing1110/ansible-ext/pkg/ansible"
-	"github.com/xuebing1110/ansible-ext/pkg/consul"
-	"github.com/xuebing1110/ansible-ext/pkg/ssh"
-	pb "github.com/xuebing1110/ansible-ext/proto/ansible"
+	"ansible-ext/host"
+	"ansible-ext/pkg/ansible"
+	"ansible-ext/pkg/consul"
+	"ansible-ext/pkg/ssh"
+	pb "ansible-ext/proto/ansible"
 )
 
 const (
